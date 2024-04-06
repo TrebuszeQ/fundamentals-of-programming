@@ -1,0 +1,12 @@
+[submodule "cwiczenie2"]
+	path = cwiczenie2
+	url = git@github.com:TrebuszeQ/fundamentals-of-programming.git
+[submodule "cwiczenie3"]
+	path = cwiczenie3
+	url = git@github.com:TrebuszeQ/fundamentals-of-programming.git
+[submodule "cwiczenie4"]
+	path = cwiczenie4
+	url = git@github.com:TrebuszeQ/fundamentals-of-programming.git
+[submodule "cwiczenie5"]
+	path = cwiczenie5
+	url = git@github.com:TrebuszeQ/fundamentals-of-programming.git

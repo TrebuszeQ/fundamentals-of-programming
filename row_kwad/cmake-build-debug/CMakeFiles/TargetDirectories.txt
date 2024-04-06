@@ -1,0 +1,3 @@
+/home/trebuszeq/Cpp/row_kwad/cmake-build-debug/CMakeFiles/row_kwad.dir
+/home/trebuszeq/Cpp/row_kwad/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/trebuszeq/Cpp/row_kwad/cmake-build-debug/CMakeFiles/rebuild_cache.dir
