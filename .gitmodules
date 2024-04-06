@@ -9,4 +9,4 @@
 	url = git@github.com:TrebuszeQ/pp-cwiczenie4.git
 [submodule "cwiczenie5"]
 	path = cwiczenie5
-	url = git@github.com:TrebuszeQ/fundamentals-of-programming.git
+	url = git@github.com:TrebuszeQ/pp-cwiczenie5.git
