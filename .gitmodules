@@ -3,10 +3,10 @@
 	url = git@github.com:TrebuszeQ/pp-cwiczenia2.git
 [submodule "cwiczenie3"]
 	path = cwiczenie3
-	url = https://github.com/TrebuszeQ/pp-cwiczenia3
+	url = git@github.com:TrebuszeQ/pp-cwiczenia3.git
 [submodule "cwiczenie4"]
 	path = cwiczenie4
-	url = https://github.com/TrebuszeQ/pp-cwiczenie4
+	url = git@github.com:TrebuszeQ/pp-cwiczenie4.git
 [submodule "cwiczenie5"]
 	path = cwiczenie5
 	url = git@github.com:TrebuszeQ/fundamentals-of-programming.git
