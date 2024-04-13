@@ -1,0 +1,3 @@
+/home/share/Cpp/cwiczenie6/cmake-build-debug/CMakeFiles/cwiczenie6.dir
+/home/share/Cpp/cwiczenie6/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/share/Cpp/cwiczenie6/cmake-build-debug/CMakeFiles/rebuild_cache.dir
