@@ -27,7 +27,13 @@ int read_int(const string& msg) {
 }
 
 int read_round_count() {
-    int num = read_int("Podaj liczbe tur gry.");
+    int num = 0;
+
+    while (num > 20 or num < 2) {
+        int num = read_int("Podaj liczbe tur gry.");
+        if (num < 2 or num > 20) cout << "Liczba tur musi byc wieksza niz 2 i mniejsza niz 20.";
+    }
+
     return num;
 }
 
@@ -39,28 +45,49 @@ int hex_dice_roll() {
     return num;
 }
 
-void dice_game(const int rounds, const int players, const int rolls, int results_arr[rounds][players][rolls]) {
+void dice_game(const int rounds, const int players, const int rolls, int*** results_arr, int*** winners_arr) {
     for (int i = 0; i < rounds; i++) {
         for (int j = 0; j < players; j++) {
             for (int k = 0; k < rolls; k++) {
                 int num = hex_dice_roll();
                 results_arr[i][j][k] = num;
+                winners_arr += results_arr[i][j][k];
             }
         }
     }
 }
 
-void print_results_array(const int rounds, const int players, const int rolls, int results_arr[rounds][players][rolls]) {
+void print_results_array(const int rounds, const int players, const int rolls, int*** results_arr, int*** winners_arr) {
     for (int i = 0; i < rounds; i++) {
+        cout << endl;
+        cout << "Runda " << i + 1 << ": ";
+        cout << endl;
+
         for (int j = 0; j < players; j++) {
-            cout << "Gracz " << j + 1 << ", runda " << i + 1 << ": ";
+            if (j == 0) cout << "\tJas " << ": ";
+            else if (j == 1) cout << "\tMalgosia " << ": ";
+//            cout << "Gracz " << j + 1 << ": ";
+
             for (int k = 0; k < rolls; k++) {
                 cout << results_arr[i][j][k] << " ";
             }
+            cout << "\tSuma: " << winners_arr[i][j][0];
             cout << endl;
         }
     }
 
+}
+
+int*** make_3d_array(int rows, int columns, int depth) {
+    int*** arr = new int**[rows];
+    for (int i = 0; i < rows; i++) {
+        arr[i] = new int*[columns];
+        for (int j = 0; j < columns; j++) {
+            arr[i][j] = new int[depth];
+        }
+    }
+
+    return arr;
 }
 
 int main() {
@@ -70,11 +97,12 @@ int main() {
     const int players = 2;
     const int rolls = 3;
 
-    int* results_ptr[rounds][players][rolls];
-    int results[rounds][players][rolls];
-//    int* results_ptr2 = new int[rounds][players][rolls];
-    dice_game(rounds, players, rolls, results);
-    print_results_array(rounds, players, rolls, results);
+    int*** results_ptr = make_3d_array(rounds, players, rolls);
+    int*** winners_ptr = make_3d_array(rounds, players, 1);
+    dice_game(rounds, players, rolls, results_ptr);
+    print_results_array(rounds, players, rolls, results_ptr);
+
+    delete results_ptr;
     return 0;
 }
 
