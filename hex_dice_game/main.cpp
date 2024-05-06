@@ -1,6 +1,6 @@
 #include <iostream>
 #include <random>
-
+#include <list>
 
 using namespace std;
 
@@ -29,9 +29,10 @@ int read_int(const string& msg) {
 int read_round_count() {
     int num = 0;
 
-    while (num > 20 or num < 2) {
-        int num = read_int("Podaj liczbe tur gry.");
-        if (num < 2 or num > 20) cout << "Liczba tur musi byc wieksza niz 2 i mniejsza niz 20.";
+    while (num < 2 or num > 20) {
+        num = read_int("Podaj liczbe tur gry.");
+
+        if (num > 20 or num < 2) cout << "Liczba tur musi byc wieksza niz 2 i mniejsza niz 20." << endl;
     }
 
     return num;
@@ -45,37 +46,61 @@ int hex_dice_roll() {
     return num;
 }
 
-void dice_game(const int rounds, const int players, const int rolls, int*** results_arr, int*** winners_arr) {
+void dice_game(const int rounds, const int players, const int rolls, int*** results_arr, int*** points_arr) {
     for (int i = 0; i < rounds; i++) {
+
         for (int j = 0; j < players; j++) {
+
             for (int k = 0; k < rolls; k++) {
                 int num = hex_dice_roll();
                 results_arr[i][j][k] = num;
-                winners_arr += results_arr[i][j][k];
+                points_arr[i][j][0] += num;
             }
+
         }
     }
 }
 
-void print_results_array(const int rounds, const int players, const int rolls, int*** results_arr, int*** winners_arr) {
+void print_results_array(const int rounds, const int players, const int rolls, const string* players_arr, int*** results_arr, int*** points_arr) {
+    int* winners = new int[rounds];
+
     for (int i = 0; i < rounds; i++) {
         cout << endl;
         cout << "Runda " << i + 1 << ": ";
         cout << endl;
 
         for (int j = 0; j < players; j++) {
-            if (j == 0) cout << "\tJas " << ": ";
-            else if (j == 1) cout << "\tMalgosia " << ": ";
-//            cout << "Gracz " << j + 1 << ": ";
+            int max_sum = 0;
+            int sum = points_arr[i][j][0];
+            int max = results_arr[i][j][0];
+            cout << players_arr[j] << ": ";
 
             for (int k = 0; k < rolls; k++) {
                 cout << results_arr[i][j][k] << " ";
+                if(max < results_arr[i][j][k]) max = results_arr[i][j][k];
             }
-            cout << "\tSuma: " << winners_arr[i][j][0];
+            cout << "\tSuma: " << sum;
             cout << endl;
+
+            if(sum > max_sum) {
+                max_sum = sum;
+                winners[i] = j;
+            }
+            else if (sum == max_sum) {
+                winners[i] = -2;
+            }
+
+            if(j == players - 1) {
+                int winner = winners[i];
+                if(winner != -2) cout << "Zwyciezca rundy " <<  i << " jest: " << players_arr[winner];
+                else if(winner == -2) cout << "Remis";
+                cout << endl;
+            }
+
         }
     }
 
+    delete[] winners;
 }
 
 int*** make_3d_array(int rows, int columns, int depth) {
@@ -97,12 +122,16 @@ int main() {
     const int players = 2;
     const int rolls = 3;
 
-    int*** results_ptr = make_3d_array(rounds, players, rolls);
-    int*** winners_ptr = make_3d_array(rounds, players, 1);
-    dice_game(rounds, players, rolls, results_ptr);
-    print_results_array(rounds, players, rolls, results_ptr);
+    string players_arr[2] = {"Jas", "Malgosia"};
+    string* players_ptr = players_arr;
 
-    delete results_ptr;
+    int*** results_ptr = make_3d_array(rounds, players, rolls);
+    int*** points_ptr = make_3d_array(rounds, players, 1);
+    dice_game(rounds, players, rolls, results_ptr, points_ptr);
+    print_results_array(rounds, players, rolls, players_ptr, results_ptr, points_ptr);
+
+    delete[] results_ptr;
+    delete[] points_ptr;
     return 0;
 }
 
