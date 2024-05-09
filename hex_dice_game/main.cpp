@@ -42,14 +42,16 @@ class DiceGame {
     private:
         int*** results_arr;
         int*** points_arr;
-        int* winners;
+        int* round_winners;
+        float* avg_arr;
         string* players_arr;
-        int** records{};
-        int sum_max = 0;
+        int* won_count;
+        int round_max_sum = 0;
         int max_roll = 0;
+        int most_wins = 0;
         list<int> max_rounds;
         list<int> max_players;
-
+        list<int> final_winners;
 
         static int hex_dice_roll() {
             random_device rd;
@@ -73,38 +75,87 @@ class DiceGame {
 
         void set_results() {
             for (int i = 0; i < rounds; i++) {
+                round_max_sum = 0;
 
                 for (int j = 0; j < players; j++) {
-                    int sum = points_arr[i][j][0];
-                    int max = results_arr[i][j][0];
-
                     for (int k = 0; k < rolls; k++) {
                         int roll = hex_dice_roll();
-                        results_arr[i][j][k] = roll;
-                        points_arr[i][j][0] += roll;
-
-                        if(max < results_arr[i][j][k]) {
-                            max = results_arr[i][j][k];
-                            max_rounds.clear();
-                            max_rounds.push_back(j);
-                            max_players.clear();
-                            max_players.push_back(i);
-                        }
-                        else if(max == results_arr[i][j][k]) {
-                            max_rounds.push_back(j);
-                            max_players.push_back(i);
-                        }
-
-
+                        set_results_arr_indice(i, j, k, roll);
+                        set_points_arr_indice(i, j, roll);
+                        set_max_roll(i, j, roll);
                     }
+                    set_round_winner(i, j);
+                    increment_winners(round_winners[i]);
+                    increment_avg_arr_indice(i, j);
+                }
+            }
 
-                    if(sum > sum_max) {
-                        sum_max = sum;
-                        winners[i] = j;
-                    }
-                    else if (sum == sum_max) {
-                        winners[i] = -2;
-                    }
+            set_avg_values();
+        }
+
+        void set_results_arr_indice(int i, int j, int k, int value) {
+            results_arr[i][j][k] = value;
+        }
+
+        void set_points_arr_indice(int i, int j, int value) {
+            points_arr[i][j][0] += value;
+        }
+
+        void set_max_roll(int i, int j, int roll) {
+            if(max_roll < roll) {
+                max_roll = roll;
+                max_rounds.clear();
+                max_rounds.push_back(i);
+                max_players.clear();
+                max_players.push_back(j);
+            }
+            else if(max_roll == roll) {
+                max_rounds.push_back(i);
+                max_players.push_back(j);
+            }
+        }
+
+        void increment_avg_arr_indice(int i, int j) {
+            avg_arr[i] += points_arr[i][j][0];
+        }
+
+        void set_avg_values() {
+            for(int i = 0; i < players; i++) {
+                avg_arr[i] = avg_arr[i] / rounds;
+            }
+        }
+
+        void set_round_winner(int i, int j) {
+            if (points_arr[i][j][0] == round_max_sum) {
+                round_winners[i] = -2;
+            }
+            else if(points_arr[i][j][0] > round_max_sum) {
+                round_max_sum = points_arr[i][j][0];
+                round_winners[i] = j;
+            }
+        }
+
+        void increment_winners(int winner) {
+            if(winner == -2) {
+                for(int i = 0; i < players; i++) {
+                    won_count[i] += 1;
+                }
+            }
+            else {
+                won_count[winner] += 1;
+            }
+        }
+
+        void set_final_winners() {
+            for(int i = 0; i < players; i++) {
+                if(won_count[i] > most_wins) {
+                    most_wins = won_count[i];
+                    final_winners.clear();
+                    final_winners.push_back(i);
+                }
+                else if(won_count[i] == most_wins) {
+                    most_wins = won_count[i];
+                    final_winners.push_back(i);
                 }
             }
         }
@@ -121,29 +172,67 @@ class DiceGame {
             this->players_arr = players_arr;
             this->results_arr = make_3d_array(rounds, players, rolls);
             this->points_arr = make_3d_array(rounds, players, 1);
-            this->winners = new int[rounds];
+            this->round_winners = new int[rounds];
+            this->avg_arr = new float[players];
+            this->won_count = new int[players];
             set_results();
+            set_final_winners();
         }
 
         ~DiceGame() {
             free(results_arr);
             free(points_arr);
-            free(winners);
+            free(round_winners);
+            free(avg_arr);
+            free(won_count);
         }
 
         void print_records() {
-            cout << endl << "Najwiecej wyrzuconych pol to " << max_roll;
+            cout << endl << "Najwiecej wyrzuconych pol wynosi " << max_roll << ", ";
+            auto  iter = max_rounds.begin();
+
             if(max_players.size() > 1) {
-                for(int player : max_players) cout << " przez " << players_arr[player] << " ";
-                cout << " w rundach ";
+                cout << "przez: " << endl;
+                int i = 0;
+                for(int player : max_players) {
+                    advance(iter, i);
+                    cout << players_arr[player] << ", " << " runda " << *iter + 1 << endl;
+                    i++;
+                }
+            }
+
+            else if (max_players.size() == 1) {
+                int player = max_players.front();
+                cout << " przez " << players_arr[player] << " w rundzie ";
 
                 for(int round : max_rounds) cout << round << " ";
             }
-            else if (max_players.size() == 1) {
-                int player = max_players.front();
-                cout << " przez " << players_arr[player] << " w rundzie";
+        }
 
-                for(int round : max_rounds) cout << round << " ";
+        void print_winners(int i) {
+            int winner = round_winners[i];
+
+            cout << "------------------" << endl;
+            if(winner != -2) cout << "Zwyciezca rundy " <<  i + 1 << " jest: " << players_arr[winner];
+            else if(winner == -2) cout << "Remis";
+            cout << endl;
+        };
+
+        void print_final_winner() {
+            cout << "------------------" << endl;
+            if(final_winners.size() > 1) {
+                cout << "Zwyciezca gry sa: ";
+            }
+            else cout << "Zwyciezca gry jest: ";
+            for(int winner : final_winners) {
+                cout << players_arr[winner] << endl;
+            }
+        }
+
+        void print_avg_values() {
+            cout << "------------------" << endl;
+            for (int i = 0; i < players; ++i) {
+                cout << "Srednia suma dla gracza: " << players_arr[i] << " wynosi " << avg_arr[i] << endl;
             }
         }
 
@@ -154,7 +243,8 @@ class DiceGame {
                 cout << endl;
 
                 for (int j = 0; j < players; j++) {
-                    cout << players_arr[j] << ": ";
+                    cout << players_arr[j] << endl;
+                    cout << "rzuty: ";
 
                     for (int k = 0; k < rolls; k++) {
                         cout << results_arr[i][j][k] << " ";
@@ -163,17 +253,18 @@ class DiceGame {
                     cout << endl;
 
                     if(j == players - 1) {
-                        int winner = winners[i];
-                        if(winner != -2) cout << "Zwyciezca rundy " <<  i << " jest: " << players_arr[winner];
-                        else if(winner == -2) cout << "Remis";
-                        cout << endl;
+                        print_winners(i);
                     }
+                }
 
-                    if(i == rounds - 1) print_records();
+                if(i == rounds - 1)  {
+                    print_records();
                 }
             }
-        }
 
+            print_final_winner();
+            print_avg_values();
+        }
 };
 
 int main() {
