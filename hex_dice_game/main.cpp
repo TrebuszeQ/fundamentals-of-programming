@@ -42,13 +42,10 @@ class DiceGame {
     private:
         int*** results_arr;
         int*** points_arr;
-        int* round_winners;
         float* avg_arr;
         string* players_arr;
-        int* won_count;
-        int round_max_sum = 0;
+        int* round_winner_arr;
         int max_roll = 0;
-        int most_wins = 0;
         list<int> max_rounds;
         list<int> max_players;
         list<int> final_winners;
@@ -75,19 +72,30 @@ class DiceGame {
 
         void set_results() {
             for (int i = 0; i < rounds; i++) {
-                round_max_sum = 0;
+                int round_max_sum = 0;
+                int round_winner = 0;
 
                 for (int j = 0; j < players; j++) {
+                    int sum = 0;
                     for (int k = 0; k < rolls; k++) {
                         int roll = hex_dice_roll();
                         set_results_arr_indice(i, j, k, roll);
-                        set_points_arr_indice(i, j, roll);
+
+                        sum = points_arr[i][j][0] += roll;
+                        set_points_arr_indice(i, j, 0, sum);
+                        set_avg_arr_indice(i, sum);
                         set_max_roll(i, j, roll);
                     }
-                    set_round_winner(i, j);
-                    increment_winners(round_winners[i]);
-                    increment_avg_arr_indice(i, j);
+
+                    if (sum > round_max_sum) {
+                        round_max_sum = sum;
+                        round_winner = j;
+                    }
+                    else if (sum == round_max_sum) {
+                        round_winner = -2;
+                    }
                 }
+                set_round_winner(i, round_winner);
             }
 
             set_avg_values();
@@ -97,8 +105,8 @@ class DiceGame {
             results_arr[i][j][k] = value;
         }
 
-        void set_points_arr_indice(int i, int j, int value) {
-            points_arr[i][j][0] += value;
+        void set_points_arr_indice(int i, int j, int k, int value) {
+            points_arr[i][j][k] = value;
         }
 
         void set_max_roll(int i, int j, int roll) {
@@ -115,38 +123,29 @@ class DiceGame {
             }
         }
 
-        void increment_avg_arr_indice(int i, int j) {
-            avg_arr[i] += points_arr[i][j][0];
+        void set_avg_arr_indice(int i, int value) {
+            avg_arr[i] += float(value);
         }
 
         void set_avg_values() {
             for(int i = 0; i < players; i++) {
-                avg_arr[i] = avg_arr[i] / rounds;
+                avg_arr[i] = avg_arr[i] / float(rounds);
             }
         }
 
-        void set_round_winner(int i, int j) {
-            if (points_arr[i][j][0] == round_max_sum) {
-                round_winners[i] = -2;
-            }
-            else if(points_arr[i][j][0] > round_max_sum) {
-                round_max_sum = points_arr[i][j][0];
-                round_winners[i] = j;
-            }
-        }
-
-        void increment_winners(int winner) {
-            if(winner == -2) {
-                for(int i = 0; i < players; i++) {
-                    won_count[i] += 1;
-                }
-            }
-            else {
-                won_count[winner] += 1;
-            }
+        void set_round_winner(int i, int winner) {
+            round_winner_arr[i] = winner;
         }
 
         void set_final_winners() {
+            int* won_count = new int[rounds];
+            int most_wins = 0;
+
+            for(int i = 0; i < rounds; i++) {
+                int winner = round_winner_arr[i];
+                won_count[winner] += 1;
+            }
+
             for(int i = 0; i < players; i++) {
                 if(won_count[i] > most_wins) {
                     most_wins = won_count[i];
@@ -155,9 +154,12 @@ class DiceGame {
                 }
                 else if(won_count[i] == most_wins) {
                     most_wins = won_count[i];
-                    final_winners.push_back(i);
+                    final_winners.clear();
+                    final_winners.push_back(-2);
                 }
+
             }
+//            delete[] won_count;
         }
 
     public:
@@ -172,9 +174,8 @@ class DiceGame {
             this->players_arr = players_arr;
             this->results_arr = make_3d_array(rounds, players, rolls);
             this->points_arr = make_3d_array(rounds, players, 1);
-            this->round_winners = new int[rounds];
             this->avg_arr = new float[players];
-            this->won_count = new int[players];
+            this-> round_winner_arr = new int[rounds];
             set_results();
             set_final_winners();
         }
@@ -182,9 +183,8 @@ class DiceGame {
         ~DiceGame() {
             free(results_arr);
             free(points_arr);
-            free(round_winners);
             free(avg_arr);
-            free(won_count);
+            free(round_winner_arr);
         }
 
         void print_records() {
@@ -209,30 +209,31 @@ class DiceGame {
             }
         }
 
-        void print_winners(int i) {
-            int winner = round_winners[i];
-
+        void print_round_winners(int i) {
             cout << "------------------" << endl;
-            if(winner != -2) cout << "Zwyciezca rundy " <<  i + 1 << " jest: " << players_arr[winner];
-            else if(winner == -2) cout << "Remis";
+            int winner = round_winner_arr[i];
+            if(round_winner_arr[i] == -2) cout << "Remis";
+            else cout << "Zwyciezca rundy " << i + 1 << " jest: " << players_arr[winner];
             cout << endl;
         };
 
         void print_final_winner() {
-            cout << "------------------" << endl;
-            if(final_winners.size() > 1) {
-                cout << "Zwyciezca gry sa: ";
-            }
-            else cout << "Zwyciezca gry jest: ";
-            for(int winner : final_winners) {
-                cout << players_arr[winner] << endl;
+            cout << endl << "------------------" << endl;
+            cout << "Zwyciezca gry jest: " << endl;
+
+            for(int player : final_winners) {
+                if( player == -2) {
+                    cout << "remis";
+                    break;
+                }
+                else cout << players_arr[player] << " ";
             }
         }
 
         void print_avg_values() {
-            cout << "------------------" << endl;
+            cout << endl << "------------------" << endl;
             for (int i = 0; i < players; ++i) {
-                cout << "Srednia suma dla gracza: " << players_arr[i] << " wynosi " << avg_arr[i] << endl;
+                cout << "Srednia suma pol dla gracza: " << players_arr[i] << " wynosi " << avg_arr[i] << endl;
             }
         }
 
@@ -251,11 +252,8 @@ class DiceGame {
                     }
                     cout << "\tSuma: " << points_arr[i][j][0];
                     cout << endl;
-
-                    if(j == players - 1) {
-                        print_winners(i);
-                    }
                 }
+                print_round_winners(i);
 
                 if(i == rounds - 1)  {
                     print_records();
