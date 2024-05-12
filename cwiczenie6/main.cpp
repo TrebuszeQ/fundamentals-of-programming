@@ -1,11 +1,7 @@
 #include <iostream>
 #include <string>
-#include <utility>
-#include <cstring>
 #include <list>
 #include <random>
-#include <cmath>
-#include <iomanip>
 
 using namespace std;
 
