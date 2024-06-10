@@ -16,14 +16,18 @@ string read_input_str(const string& msg) {
 
 bool is_int(const string& str) {
     try { stoi(str); }
-    catch (exception &e) { return false; }
+    catch (exception &e) {
+        return false;
+    }
     return true;
 }
 
 int read_int(const string& msg) {
     string n = read_input_str(msg);
     while (true) {
-        if (is_int(n)) return stoi(n);
+        if (is_int(n)) {
+            return stoi(n);
+        }
         else cout << "Nieprawidlowa wartosc." << n << endl;
     }
 }
@@ -71,7 +75,7 @@ private:
                     int roll = hex_dice_roll();
                     set_results_arr_indice(i, j, k, roll);
 
-                    sum = *&points_arr[i][j][0] += roll;
+                    sum = points_arr[i][j][0] += roll;
                     set_points_arr_indice(i, j, sum);
                     set_avg_arr_indice(i, sum);
                     set_max_roll(i, j, roll);
@@ -114,12 +118,12 @@ private:
     }
 
     void set_avg_arr_indice(int i, int value) {
-        avg_arr[i] += double(value);
+        avg_arr[i] += value;
     }
 
     void set_avg_values() {
-        for(int i = 0; i < players; i++) {
-            avg_arr[i] /= double(rounds);
+        for(double& avg : avg_arr) {
+            avg /= rounds;
         }
     }
 
@@ -130,23 +134,20 @@ private:
     void set_final_winners() {
 
         int most_wins = 0;
-        auto  iter = round_winner_list.begin();
 
         for(int i = 0; i < rounds - 1; i++) {
-
-            advance(iter, i);
             int winner = get_int_list_element(i, round_winner_list);
             won_count[winner] += 1;
         }
 
         for(int i = 0; i < players; i++) {
-            if(*&won_count[i] > most_wins) {
+            if(won_count[i] > most_wins) {
                 most_wins = won_count[i];
                 final_winners.clear();
                 final_winners.push_back(i);
             }
-            else if(*&won_count[i] == most_wins) {
-                most_wins = *&won_count[i];
+            else if(won_count[i] == most_wins) {
+                most_wins = won_count[i];
                 final_winners.clear();
                 final_winners.push_back(-2);
             }
@@ -159,21 +160,22 @@ public:
     int players;
     vector<string> players_arr;
 
-    DiceGame(int players, vector<string> players_arr, int rolls) {
+    explicit DiceGame(int players, vector<string> players_arr, int rolls) {
         this->rolls = rolls;
-        this->players_arr = players_arr;
+        this->players_arr = std::move(players_arr);
         this->players = players;
         this->points_arr = vector<vector<vector<int>>>(rounds, vector<vector<int>>(players, vector<int>(1)));
         this->results_arr = vector<vector<vector<int>>>(rounds, vector<vector<int>>(players, vector<int>(rolls)));
-        this->avg_arr = vector(players, 0.0);
-        this->won_count = vector(players, 0);
+        this->avg_arr = vector<double>(players, 0.0);
+        this->won_count = vector<int>(players, 0);
         set_results();
         set_final_winners();
-
     }
 
-    static int get_int_list_element(int i, list<int> list) {
-        auto  iter = list.begin();
+    ~DiceGame() = default;
+
+    static int get_int_list_element(int i, const list<int>& list) {
+        auto iter = list.begin();
         advance(iter, i);
         return *iter;
     }
@@ -184,13 +186,13 @@ public:
             cout << "przez: " << endl;
             for(int i = 0; i < players_max_roll.size(); i++) {
                 int player = get_int_list_element(i, players_max_roll);
-                cout << players_arr[player] << ", " << " runda " << i + 1 << endl;;
+                cout << players_arr[player] << ", " << " runda " << i + 1 << endl;
             }
         }
 
         else if (players_max_roll.size() == 1) {
-            int player = *&players_max_roll.front();
-            cout << " przez " << *&players_arr[player] << " w rundzie ";
+            int player = players_max_roll.front();
+            cout << " przez " << players_arr[player] << " w rundzie ";
 
             for(int round : max_rounds) cout << round << " ";
         }
@@ -256,7 +258,7 @@ int main() {
     cout << "Gra w rzut szescienna kostka." << endl;
     const int players = 2;
     const vector<string> players_arr = {"Jas", "Malgosia"};
-    static DiceGame dice_game = DiceGame(players, players_arr, 3);
+    DiceGame dice_game = DiceGame(players, players_arr, 3);
     dice_game.print_results();
-    return 0;
+    exit(0);
 }
