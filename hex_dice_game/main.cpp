@@ -34,14 +34,13 @@ int read_int(const string& msg) {
 
 class DiceGame {
 private:
-    vector<vector<vector<int>>> results_arr;
-    vector<vector<vector<int>>> points_arr;
+    vector<vector<vector<int>>> rolls_arr;
+    vector<vector<int>> points_arr;
     int max_roll = 0;
     list<int> round_winner_list;
     list<int> max_rounds;
     list<int> players_max_roll;
     list<int> final_winners;
-    vector<double> avg_arr;
     vector<int> won_count;
 
     static int hex_dice_roll() {
@@ -73,11 +72,9 @@ private:
                 int sum = 0;
                 for (int k = 0; k < rolls; k++) {
                     int roll = hex_dice_roll();
-                    set_results_arr_indice(i, j, k, roll);
-
-                    sum = points_arr[i][j][0] += roll;
+                    set_rolls_arr_indice(i, j, k, roll);
+                    sum = points_arr[i][j] + roll;
                     set_points_arr_indice(i, j, sum);
-                    set_avg_arr_indice(i, sum);
                     set_max_roll(i, j, roll);
                 }
 
@@ -91,16 +88,15 @@ private:
             }
             set_round_winner(round_winner);
         }
-
-        set_avg_values();
     }
 
-    void set_results_arr_indice(int i, int j, int k, int value) {
-        results_arr[i][j][k] = value;
+    void set_rolls_arr_indice(int round, int player, int roll_number, int roll) {
+        rolls_arr[round][player][roll_number] = roll;
     }
 
-    void set_points_arr_indice(int i, int j, int value) {
-        points_arr[i][j][0] = value;
+    void set_points_arr_indice(int round, int player, int roll) {
+//        cout << "round: " << round << " player: " << player << endl;
+        points_arr[round][player] = roll;
     }
 
     void set_max_roll(int i, int j, int roll) {
@@ -117,27 +113,24 @@ private:
         }
     }
 
-    void set_avg_arr_indice(int i, int value) {
-        avg_arr[i] += value;
-    }
-
-    void set_avg_values() {
-        for(double& avg : avg_arr) {
-            avg /= rounds;
-        }
-    }
-
     void set_round_winner(int winner) {
         round_winner_list.push_back(winner);
     }
 
     void set_final_winners() {
-
         int most_wins = 0;
 
         for(int i = 0; i < rounds - 1; i++) {
             int winner = get_int_list_element(i, round_winner_list);
-            won_count[winner] += 1;
+//            cout << "winner: " << winner;
+            if(winner == -2) {
+                for(int j = 0; j < players; j++) {
+                    won_count[j] += 1;
+                }
+            }
+            else {
+                won_count[winner] += 1;
+            }
         }
 
         for(int i = 0; i < players; i++) {
@@ -164,9 +157,8 @@ public:
         this->rolls = rolls;
         this->players_arr = std::move(players_arr);
         this->players = players;
-        this->points_arr = vector<vector<vector<int>>>(rounds, vector<vector<int>>(players, vector<int>(1)));
-        this->results_arr = vector<vector<vector<int>>>(rounds, vector<vector<int>>(players, vector<int>(rolls)));
-        this->avg_arr = vector<double>(players, 0.0);
+        this->points_arr = vector<vector<int>>(rounds, vector<int>(players));
+        this->rolls_arr = vector<vector<vector<int>>>(rounds, vector<vector<int>>(players, vector<int>(rolls)));
         this->won_count = vector<int>(players, 0);
         set_results();
         set_final_winners();
@@ -222,7 +214,14 @@ public:
     void print_avg_values() {
         cout << endl << "------------------" << endl;
         for (int i = 0; i < players; ++i) {
-            cout << "Srednia suma pol dla gracza: " << players_arr[i] << " wynosi " << avg_arr[i] << endl;
+            cout << "Srednia suma pol dla gracza: " << players_arr[i] << " wynosi ";
+            double average = 0;
+            for(int j = 0; j < rounds; j++) {
+//                cout << endl << "gracz: " << i << " runda: " << j << endl;
+                average += points_arr[j][i];
+            }
+            average /= rounds;
+            cout << average << endl;
         }
     }
 
@@ -237,9 +236,9 @@ public:
                 cout << "rzuty: ";
 
                 for (int k = 0; k < rolls; k++) {
-                    cout << results_arr[i][j][k] << " ";
+                    cout << rolls_arr[i][j][k] << " ";
                 }
-                cout << "\tSuma: " << points_arr[i][j][0];
+                cout << "\tSuma: " << points_arr[i][j];
                 cout << endl;
             }
             print_round_winners(i);
@@ -260,5 +259,5 @@ int main() {
     const vector<string> players_arr = {"Jas", "Malgosia"};
     DiceGame dice_game = DiceGame(players, players_arr, 3);
     dice_game.print_results();
-    exit(0);
+    return 0;
 }

@@ -14,7 +14,7 @@ string read_input_str(const string &msg) {
 bool is_int(const string &str) {
     try {
         stoi(str);
-    } catch (exception e) {
+    } catch (exception& e) {
         return false;
     }
     return true;
@@ -31,7 +31,7 @@ int read_int(const string &msg) {
 }
 
 int **make_2d_array(int rows, int columns) {
-    int **arr = new int *[rows];
+    int **arr = new int* [rows];
     for (int i = 0; i < rows - 1; i++) {
         arr[i] = new int[columns];
     }
@@ -67,18 +67,22 @@ void print_2d_arr_matrice(int **arr, int columns, int rows) {
     }
 }
 
-string print_2d_arr_matrice(int **arr, int columns, int rows) {
-    string text = "";
-    for (int i = 0; i < columns - 1; i++) {
-        text + " | ";
-        for (int j = 0; j < rows - 1; j++) {
-            text + stoi(arr[i][j]) + " ";
+string arr_to_text(int** arr, int columns, int rows) {
+    string text;
+    for(int col = 0; col < columns; col++) {
+        int num = arr[col];
+        string cha = to_string(arr[col]);
+        text += to_string(col);
+        for(int row = 0; row < rows; row++) {
+            text += to_string(rows);
         }
-        cout << " | " << endl;
+        text += "\n";
     }
+
+    return text;
 }
 
-void open_or_create_file(string filename) {
+void open_or_create_file(const string& filename) {
     fstream file;
     try {
         file.open(filename, ios::out);
@@ -96,7 +100,7 @@ void open_or_create_file(string filename) {
     file.close();
 }
 
-void write_text_to_file(string filename, string text) {
+void write_text_to_file(const string& filename, const string& text) {
     fstream file;
     try {
         file.open(filename, ios::out);
