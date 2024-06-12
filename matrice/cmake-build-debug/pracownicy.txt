@@ -1,0 +1,10 @@
+Jacki 15 6700
+Apsik 20 7300
+Binga 5 3500
+Aboda 11 4000
+Kowalczyk 7 3300
+Jatyka 1 3000
+Sernik 7 4200
+Aleski 17 5500
+Kajduk 21 6000
+Forman 18 6000
