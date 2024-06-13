@@ -1,4 +1,4 @@
-/var/lib/snapd/snap/clion/282/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/var/lib/snapd/snap/clion/282/bin/ninja/linux/x64/ninja -G Ninja -S /home/share/cpp/fundamentals-of-programming/hex_dice_game -B /home/share/cpp/fundamentals-of-programming/hex_dice_game/cmake-build-debug
+/var/lib/snapd/snap/clion/275/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/var/lib/snapd/snap/clion/275/bin/ninja/linux/x64/ninja -G Ninja -S /home/share/cpp/fundamentals-of-programming/hex_dice_game -B /home/share/cpp/fundamentals-of-programming/hex_dice_game/cmake-build-debug
 -- The C compiler identification is GNU 13.2.1
 -- The CXX compiler identification is GNU 13.2.1
 -- Detecting C compiler ABI info
@@ -11,6 +11,6 @@
 -- Check for working CXX compiler: /usr/bin/c++ - skipped
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
--- Configuring done (0.4s)
+-- Configuring done (2.6s)
 -- Generating done (0.0s)
 -- Build files have been written to: /home/share/cpp/fundamentals-of-programming/hex_dice_game/cmake-build-debug

@@ -6,33 +6,6 @@
 
 using namespace std;
 
-string read_input_str(const string &msg) {
-    string in;
-    cout << msg << endl;
-    cin >> in;
-
-    return in;
-}
-
-bool is_int(const string &str) {
-    try {
-        stoi(str);
-    } catch (exception& e) {
-        return false;
-    }
-    return true;
-}
-
-int read_int(const string &msg) {
-    string n = read_input_str(msg);
-    while (true) {
-        if (is_int(n))
-            return stoi(n);
-        else
-            cout << "Nieprawidlowa wartosc." << n << endl;
-    }
-}
-
 int random_num(int p, int k) {
     random_device rd;
     mt19937 gen(rd());
@@ -109,13 +82,21 @@ list<string> open_or_create_file_and_read_to_list(const string& path) {
         printf("Sciezka %s otwarta pomyslnie.", path.c_str());
         cout << endl;
         string line;
-        while (getline(file, line)) {
-            lines.push_back(line);
-//          Drukuje linie tylko podczas debugowania.
-            printf("Odczytana linia: %s", line.c_str());
+        try {
+            while (getline(file, line)) {
+                int line_len = line.length();
+                line = line.substr(0, line_len - 1);
+                lines.push_back(line);
+                printf("Odczytana linia: %s", line.c_str());
+                cout << endl;
+            }
+            printf("Sciezka %s odczytana pomyslnie.", path.c_str());
+            cout << endl;
         }
-        printf("Sciezka %s odczytana pomyslnie.", path.c_str());
-        cout << endl;
+        catch(exception& e) {
+            printf("Sciezka nie mogla zostac odczytana z powodu bledu %s.", e.what());
+        }
+
 
     }
     catch (const exception& e) {
@@ -125,6 +106,13 @@ list<string> open_or_create_file_and_read_to_list(const string& path) {
     file.close();
 
     return lines;
+}
+
+void print_list_content(const list<string>& lis) {
+    for(const string& node : lis) {
+        printf("Wezel listy: %s", node.c_str());
+        cout << endl;
+    }
 }
 
 void open_or_create_file_and_write_text(const string& path, const string& text) {
@@ -172,7 +160,7 @@ int sum_under_diagonal_verbose(vector<vector<int>>& arr, int columns) {
 
 void zadanie1(int columns, int rows) {
     printf("Zadanie 1");
-    cout << endl << endl;
+    cout << endl;
     vector<vector<int>> arr = vector<vector<int>>(columns, vector<int>(rows));
     fill_random_2d_array(arr, columns, rows, 1, 6);
     print_2d_arr_matrice(arr, rows, columns);
@@ -187,22 +175,47 @@ void zadanie1(int columns, int rows) {
     cout << endl;
 }
 
-list<string> split_string_by_char(string& line, char delimeter) {
-    list<string> parts_list;
-    int end = 0;
-    for(char ch : line) {
-        if(ch == delimeter) {
-            string part = line.substr(0, end);
-            parts_list.push_back(part);
-            end = 0;
+int find_char_position(const string& str, const char& ch) {
+    int result = 0;
+    for(char ch2 : str) {
+        if(ch2 == ch) {
+            return result;
         }
-        end += 1;
+        result += 1;
+    }
+    return -2;
+}
+
+list<string> split_string_by_char(const string& line, const char& delimeter) {
+    list<string> parts_list;
+    int end;
+    string line2 = line;
+    for(int i = 0; i < line.length(); i++) {
+        try {
+            string part;
+            end = find_char_position(line2, delimeter);
+            int line2_len = line2.length();
+            if(end == -2) {
+                part = line2;
+                parts_list.push_back(part);
+                break;
+            }
+            else {
+                part = line2.substr(0, end);
+            }
+            parts_list.push_back(part);
+            int part_len = part.length();
+            line2 = line2.substr(part_len + 1, line2_len - part_len);
+        }
+        catch(exception& e) {
+            printf("Wystapil blad %s, podczas ciecia linii %s w miejscu %i.", e.what(), line.c_str(), i);
+        }
     }
 
     return parts_list;
 }
 
-vector<vector<string>> write_list_to_2d_array(int columns, list<string>& lis) {
+vector<vector<string>> list_to_2d_array(int columns, list<string>& lis) {
     auto workers_arr_ptr = vector<vector<string>>(columns, vector<string>(0));
     for(int i = 0; i < columns; i++) {
         for(string line : lis) {
@@ -220,15 +233,46 @@ vector<vector<string>> write_list_to_2d_array(int columns, list<string>& lis) {
     return workers_arr_ptr;
 }
 
+double count_average_worker_salary_by_seniority(vector<vector<string>>& arr, int col, int seniority) {
+    double result = 0;
+    int count = 0;
+    for(int i = 0; i < col; i++) {
+        int seniority2;
+        int salary;
+        try {
+            seniority2 = stoi(arr[i][1]);
+            salary = stoi(arr[i][2]);
+        }
+        catch(exception& e) {
+            printf("Nie mozna bylo odczytac zawartosci tablicy z powodu bledu %s.", e.what());
+            return 0.0;
+        }
+        if(seniority2 > seniority) {
+            result += double(salary);
+            count += 1;
+        }
+    }
+    if(result > 0) {
+        result /= count;
+    }
+
+    printf("Srednia placa pracownikow o stazu wiekszym od %i wynosi %f.", seniority, result);
+    cout << endl;
+    return result;
+}
+
 void zadanie2() {
     printf("Zadanie 2");
-    cout << endl << endl;
+    cout << endl;
     list<string> lines = open_or_create_file_and_read_to_list("pracownicy.txt");
+//    print_list_content(lines);
     int columns =  lines.size();
-    auto workers_arr_ptr = write_list_to_2d_array(columns, lines);
-
+    auto workers_arr= list_to_2d_array(columns, lines);
+    double avg_salary = count_average_worker_salary_by_seniority(workers_arr, columns, 10);
 
 }
+
+
 
 int main() {
     printf("Zadanie dodatkowe - Hubert Dabrowski D5 PUW");

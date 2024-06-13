@@ -763,8 +763,8 @@
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "/home/share/cpp/fundamentals-of-programming/hex_dice_game/cmake-build-debug",
-		"source" : "/home/share/cpp/fundamentals-of-programming/hex_dice_game"
+		"build" : "/home/share/cpp/fundamentals-of-programming/matrice/cmake-build-debug",
+		"source" : "/home/share/cpp/fundamentals-of-programming/matrice"
 	},
 	"version" : 
 	{
