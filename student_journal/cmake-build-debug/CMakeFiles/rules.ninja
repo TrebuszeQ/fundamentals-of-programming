@@ -6,7 +6,7 @@
 # It is included in the main 'build.ninja'.
 
 # =============================================================================
-# Project: hex_dice_game
+# Project: student_journal
 # Configurations: Debug
 # =============================================================================
 # =============================================================================
@@ -14,7 +14,7 @@
 #############################################
 # Rule for compiling CXX files.
 
-rule CXX_COMPILER__hex_dice_game_unscanned_Debug
+rule CXX_COMPILER__student_journal_unscanned_Debug
   depfile = $DEP_FILE
   deps = gcc
   command = ${LAUNCHER}${CODE_CHECK}/usr/bin/c++ $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
@@ -24,7 +24,7 @@ rule CXX_COMPILER__hex_dice_game_unscanned_Debug
 #############################################
 # Rule for linking CXX executable.
 
-rule CXX_EXECUTABLE_LINKER__hex_dice_game_Debug
+rule CXX_EXECUTABLE_LINKER__student_journal_Debug
   command = $PRE_LINK && /usr/bin/c++ $FLAGS $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
   description = Linking CXX executable $TARGET_FILE
   restat = $RESTAT
@@ -42,7 +42,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /var/lib/snapd/snap/clion/282/bin/cmake/linux/x64/bin/cmake --regenerate-during-build -S/home/share/cpp/fundamentals-of-programming/hex_dice_game -B/home/share/cpp/fundamentals-of-programming/hex_dice_game/cmake-build-debug
+  command = /var/lib/snapd/snap/clion/282/bin/cmake/linux/x64/bin/cmake --regenerate-during-build -S/home/share/cpp/fundamentals-of-programming/student_journal -B/home/share/cpp/fundamentals-of-programming/student_journal/cmake-build-debug
   description = Re-running CMake...
   generator = 1
 

@@ -30,6 +30,7 @@ void print_2d_arr_matrice(vector<vector<int>>& arr, int rows, int columns) {
         }
         cout << "|" << endl;
     }
+    cout << endl;
 }
 
 string arr_to_text(vector<vector<int>>& arr, int columns, int rows) {
@@ -53,6 +54,7 @@ void open_or_create_file(const string& filename) {
 
         if (!file) {
             printf("Plik %s nie istnieje.", filename.c_str());
+            cout << endl;
             printf("Plik %s stworzony pomyslnie.", filename.c_str());
             cout << endl;
         }
@@ -64,6 +66,7 @@ void open_or_create_file(const string& filename) {
         printf("Plik nie mogl zostac otwarty z powodu bledu %s.", e.what());
         cout << endl;
     }
+    cout << endl;
     file.close();
 }
 
@@ -74,12 +77,13 @@ list<string> open_or_create_file_and_read_to_list(const string& path) {
     try {
 
         if (!file) {
-            printf("Sciezka %s nie istnieje.", path.c_str());
-            printf("Sciezka %s stworzona pomyslnie.", path.c_str());
+            printf("Plik %s nie istnieje.", path.c_str());
+            cout << endl;
+            printf("Plik %s stworzony pomyslnie.", path.c_str());
             cout << endl;
         }
-        file.open(path, ios::in);
-        printf("Sciezka %s otwarta pomyslnie.", path.c_str());
+        file.open(path, ios::out);
+        printf("Plik %s otwarty pomyslnie.", path.c_str());
         cout << endl;
         string line;
         try {
@@ -90,46 +94,39 @@ list<string> open_or_create_file_and_read_to_list(const string& path) {
                 printf("Odczytana linia: %s", line.c_str());
                 cout << endl;
             }
-            printf("Sciezka %s odczytana pomyslnie.", path.c_str());
+            printf("Plik %s odczytany pomyslnie.", path.c_str());
             cout << endl;
         }
         catch(exception& e) {
-            printf("Sciezka nie mogla zostac odczytana z powodu bledu %s.", e.what());
+            printf("Plik nie mogl zostac odczytany z powodu bledu %s.", e.what());
+            cout << endl;
         }
-
-
     }
     catch (const exception& e) {
-        printf("sciezka nie mogla zostac otwarta z powodu bledu %s.", e.what());
+        printf("Plik nie mogl zostac otwarty z powodu bledu %s.", e.what());
         cout << endl;
     }
     file.close();
-
+    cout << endl;
     return lines;
-}
-
-void print_list_content(const list<string>& lis) {
-    for(const string& node : lis) {
-        printf("Wezel listy: %s", node.c_str());
-        cout << endl;
-    }
 }
 
 void open_or_create_file_and_write_text(const string& path, const string& text) {
     fstream file;
     try {
         if (!file) {
-            printf("Sciezka %s nie istnieje.", path.c_str());
-            printf("Sciezka %s stworzona pomyslnie.", path.c_str());
+            printf("Plik %s nie istnieje.", path.c_str());
+            cout << endl;
+            printf("Plik %s stworzony pomyslnie.", path.c_str());
             cout << endl;
         }
-        file.open(path, ios::in);
-        printf("Sciezka %s otwarta pomyslnie.", path.c_str());
+        file.open(path, ios::out);
+        printf("Plik %s otwarty pomyslnie.", path.c_str());
         cout << endl;
         file << text;
-        printf("Sciezka %s nadpisana tekstem:\n%s.", path.c_str(), text.c_str());
+        printf("Plik %s nadpisany tekstem:\n%s", path.c_str(), text.c_str());
         cout << endl;
-        printf("Sciezka %s odczytana pomyslnie.", path.c_str());
+        printf("Plik %s odczytany pomyslnie.", path.c_str());
         cout << endl;
 
     }
@@ -137,7 +134,7 @@ void open_or_create_file_and_write_text(const string& path, const string& text) 
         printf("Plik nie mogl zostac otwarty z powodu bledu %s.", e.what());
         cout << endl;
     }
-
+    cout << endl;
     file.close();
 }
 
@@ -156,23 +153,6 @@ int sum_under_diagonal_verbose(vector<vector<int>>& arr, int columns) {
     cout << endl;
     cout << endl;
     return sum;
-}
-
-void zadanie1(int columns, int rows) {
-    printf("Zadanie 1");
-    cout << endl;
-    vector<vector<int>> arr = vector<vector<int>>(columns, vector<int>(rows));
-    fill_random_2d_array(arr, columns, rows, 1, 6);
-    print_2d_arr_matrice(arr, rows, columns);
-    cout << endl;
-    string text = arr_to_text(arr, columns, rows);
-    string filename = "2d_matrice.txt";
-    open_or_create_file(filename);
-    cout << endl;
-    open_or_create_file_and_write_text(filename, text);
-    cout << endl;
-    sum_under_diagonal_verbose(arr, columns);
-    cout << endl;
 }
 
 int find_char_position(const string& str, const char& ch) {
@@ -216,21 +196,21 @@ list<string> split_string_by_char(const string& line, const char& delimeter) {
 }
 
 vector<vector<string>> list_to_2d_array(int columns, list<string>& lis) {
-    auto workers_arr_ptr = vector<vector<string>>(columns, vector<string>(0));
-    for(int i = 0; i < columns; i++) {
-        for(string line : lis) {
-            list<string> splitted_line = split_string_by_char(line, ' ');
-            int parts_len = lis.size();
-            int j = 0;
-            auto entries_arr = vector<string>(parts_len, "");
-            for(string& part : splitted_line) {
-                entries_arr[j] = part;
-                j += 1;
-            }
-            workers_arr_ptr[i] = entries_arr;
+    auto workers_arr = vector<vector<string>>(columns, vector<string>(0));
+    int i = 0;
+    for(string line : lis) {
+        list<string> splitted_line = split_string_by_char(line, ' ');
+        int parts_len = splitted_line.size();
+        int j = 0;
+        auto entries_arr = vector<string>(parts_len, "");
+        for(string& part : splitted_line) {
+            entries_arr[j] = part;
+            j += 1;
         }
+        workers_arr[i] = entries_arr;
+        i += 1;
     }
-    return workers_arr_ptr;
+    return workers_arr;
 }
 
 double count_average_worker_salary_by_seniority(vector<vector<string>>& arr, int col, int seniority) {
@@ -261,15 +241,48 @@ double count_average_worker_salary_by_seniority(vector<vector<string>>& arr, int
     return result;
 }
 
+string filter_out_by_seniority_to_text(vector<vector<string>>& arr, int columns, int seniority) {
+    string result;
+    for(int i = 0; i < columns; i++) {
+        int seniority2 = stoi(arr[i][1]);
+        string name = arr[i][0];
+        if(seniority2 > seniority) {
+            result += name + "\n";
+        }
+    }
+    return result;
+}
+
+void zadanie1(int columns, int rows) {
+    printf("Zadanie 1");
+    cout << endl;
+    vector<vector<int>> arr = vector<vector<int>>(columns, vector<int>(rows));
+    fill_random_2d_array(arr, columns, rows, 1, 6);
+    print_2d_arr_matrice(arr, rows, columns);
+    cout << "-------------------" << endl;
+    string text = arr_to_text(arr, columns, rows);
+    string filename = "2d_matrice.txt";
+    open_or_create_file(filename);
+    cout << "-------------------" << endl;
+    open_or_create_file_and_write_text(filename, text);
+    cout << "-------------------" << endl;
+    sum_under_diagonal_verbose(arr, columns);
+    cout << "-------------------" << endl << endl;
+}
+
+
 void zadanie2() {
     printf("Zadanie 2");
     cout << endl;
     list<string> lines = open_or_create_file_and_read_to_list("pracownicy.txt");
-//    print_list_content(lines);
+    cout << "-------------------" << endl;
     int columns =  lines.size();
     auto workers_arr= list_to_2d_array(columns, lines);
     double avg_salary = count_average_worker_salary_by_seniority(workers_arr, columns, 10);
-
+    cout << "-------------------" << endl;
+    string above_10_workers = filter_out_by_seniority_to_text(workers_arr, columns, 10);
+    open_or_create_file_and_write_text("pracownicy2.txt", above_10_workers);
+    cout << "-------------------" << endl << endl;
 }
 
 

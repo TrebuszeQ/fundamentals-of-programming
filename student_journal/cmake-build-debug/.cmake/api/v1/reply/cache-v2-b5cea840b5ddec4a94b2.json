@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/share/cpp/fundamentals-of-programming/hex_dice_game/cmake-build-debug"
+			"value" : "/home/share/cpp/fundamentals-of-programming/student_journal/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -115,7 +115,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/var/lib/snapd/snap/clion/275/bin/cmake/linux/x64/bin/cmake"
+			"value" : "/var/lib/snapd/snap/clion/282/bin/cmake/linux/x64/bin/cmake"
 		},
 		{
 			"name" : "CMAKE_CPACK_COMMAND",
@@ -127,7 +127,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/var/lib/snapd/snap/clion/275/bin/cmake/linux/x64/bin/cpack"
+			"value" : "/var/lib/snapd/snap/clion/282/bin/cmake/linux/x64/bin/cpack"
 		},
 		{
 			"name" : "CMAKE_CTEST_COMMAND",
@@ -139,7 +139,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/var/lib/snapd/snap/clion/275/bin/cmake/linux/x64/bin/ctest"
+			"value" : "/var/lib/snapd/snap/clion/282/bin/cmake/linux/x64/bin/ctest"
 		},
 		{
 			"name" : "CMAKE_CXX_COMPILER",
@@ -543,7 +543,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/share/cpp/fundamentals-of-programming/hex_dice_game/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "/home/share/cpp/fundamentals-of-programming/student_journal/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -603,7 +603,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/share/cpp/fundamentals-of-programming/hex_dice_game"
+			"value" : "/home/share/cpp/fundamentals-of-programming/student_journal"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -655,7 +655,7 @@
 				}
 			],
 			"type" : "UNINITIALIZED",
-			"value" : "/var/lib/snapd/snap/clion/275/bin/ninja/linux/x64/ninja"
+			"value" : "/var/lib/snapd/snap/clion/282/bin/ninja/linux/x64/ninja"
 		},
 		{
 			"name" : "CMAKE_MODULE_LINKER_FLAGS",
@@ -843,7 +843,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "hex_dice_game"
+			"value" : "student_journal"
 		},
 		{
 			"name" : "CMAKE_RANLIB",
@@ -887,7 +887,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/var/lib/snapd/snap/clion/275/bin/cmake/linux/x64/share/cmake-3.28"
+			"value" : "/var/lib/snapd/snap/clion/282/bin/cmake/linux/x64/share/cmake-3.28"
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS",
@@ -1154,7 +1154,7 @@
 			"value" : "TRUE"
 		},
 		{
-			"name" : "hex_dice_game_BINARY_DIR",
+			"name" : "student_journal_BINARY_DIR",
 			"properties" : 
 			[
 				{
@@ -1163,10 +1163,10 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/share/cpp/fundamentals-of-programming/hex_dice_game/cmake-build-debug"
+			"value" : "/home/share/cpp/fundamentals-of-programming/student_journal/cmake-build-debug"
 		},
 		{
-			"name" : "hex_dice_game_IS_TOP_LEVEL",
+			"name" : "student_journal_IS_TOP_LEVEL",
 			"properties" : 
 			[
 				{
@@ -1178,7 +1178,7 @@
 			"value" : "ON"
 		},
 		{
-			"name" : "hex_dice_game_SOURCE_DIR",
+			"name" : "student_journal_SOURCE_DIR",
 			"properties" : 
 			[
 				{
@@ -1187,7 +1187,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/share/cpp/fundamentals-of-programming/hex_dice_game"
+			"value" : "/home/share/cpp/fundamentals-of-programming/student_journal"
 		}
 	],
 	"kind" : "cache",

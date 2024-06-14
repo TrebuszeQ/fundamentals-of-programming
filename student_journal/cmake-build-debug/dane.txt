@@ -1,0 +1,12 @@
+Adam Aboda|80 91 51 0 74 92
+Agata Bura|70 85 90 50 61 80
+Jan Kowalski|65 78 85 45 59 72
+Anna Nowak|72 88 91 53 67 84
+Paweł Wiśniewski|60 75 80 49 55 70
+Katarzyna Zielińska|68 82 89 52 63 78
+Michał Woźniak|71 86 93 57 69 83
+Monika Lewandowska|64 79 87 50 62 75
+Tomasz Dąbrowski|66 81 88 55 61 77
+Joanna Kamińska|73 89 92 54 70 85
+Piotr Krawczyk|62 77 84 48 58 73
+Magdalena Grabowska|69 83 90 51 64 79
