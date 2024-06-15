@@ -133,17 +133,16 @@ double count_average_grade(const list<int>& grade_list) {
 
 list<Student> str_student_list_to_student(list<string>& student_list) {
     list<Student> list_student_struct;
-    list<string> grades_str;
+    vector<string> grades_str;
     vector<string> grades_str_vector;
     list<int> grades_list;
     list<string> line_splitted;
     for(string& line : student_list) {
         line_splitted = split_string_by_char(line, '|');
-        string grades_line = grades_str.front();
-        str_line_to_int_list
+        grades_str = line_splitted.back();
+        grades_list = str_line_to_int_list(line_splitted.back());
     }
     Student stud = *new Student;
-    str_line_to_int_list
     stud.oceny = list_to_vector(grades_str, grades_str.size());
     stud.srednia_ocen = count_average_grade(grades_list);
 }
